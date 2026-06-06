@@ -161,6 +161,12 @@ h3 {
   color: var(--silver);
 }
 
+.text-link {
+  display: inline-flex;
+  color: var(--cyan);
+  font-weight: 800;
+}
+
 .product-preview {
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -349,6 +355,35 @@ h3 {
   margin-top: 20px;
 }
 
+.education-hero {
+  min-height: 520px;
+}
+
+.article-section {
+  background: #0a1016;
+}
+
+.article {
+  max-width: 860px;
+}
+
+.article h2 {
+  margin-top: 34px;
+  font-size: clamp(26px, 3vw, 36px);
+}
+
+.article p,
+.article li {
+  color: var(--muted);
+  font-size: 18px;
+}
+
+.article ol {
+  display: grid;
+  gap: 8px;
+  padding-left: 22px;
+}
+
 .ai-roadmap {
   background: #091016;
 }
@@ -465,6 +500,11 @@ pre {
 
 .site-footer span:first-child {
   color: var(--text);
+  font-weight: 700;
+}
+
+.site-footer a {
+  color: var(--cyan);
   font-weight: 700;
 }
 

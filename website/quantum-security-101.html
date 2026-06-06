@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Quantum Security 101 | Qyrion</title>
+    <meta
+      name="description"
+      content="A plain-English guide to quantum cybersecurity, harvest-now-decrypt-later risk, CBOMs, and post-quantum readiness planning."
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="index.html" aria-label="Qyrion home">
+        <span class="brand-mark">Q</span>
+        <span>Qyrion</span>
+      </a>
+      <nav class="nav" aria-label="Primary navigation">
+        <a href="index.html#cbom">CBOM</a>
+        <a href="index.html#workflow">Workflow</a>
+        <a href="index.html#evidence">Evidence</a>
+        <a href="index.html#plan">Plan</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero education-hero">
+        <div class="hero-copy">
+          <p class="eyebrow">Qyrion Academy</p>
+          <h1>Quantum Security 101</h1>
+          <p class="hero-text">
+            A practical guide for business leaders and security teams who want to understand
+            post-quantum risk without panic or jargon.
+          </p>
+          <div class="hero-actions">
+            <a class="button primary" href="index.html#plan">Try the CBOM explainer</a>
+            <a class="button secondary" href="index.html">Back to Qyrion</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="section article-section">
+        <article class="article">
+          <h2>What quantum security means</h2>
+          <p>
+            Much of today's digital security depends on public-key cryptography, including RSA and
+            elliptic curve cryptography. These systems help protect websites, software updates,
+            identity systems, business communications, and sensitive records.
+          </p>
+          <p>
+            A powerful enough quantum computer could eventually break many of these public-key
+            systems. That does not mean every business needs to replace everything today. It means
+            businesses need visibility and a plan.
+          </p>
+
+          <h2>What harvest now, decrypt later means</h2>
+          <p>
+            Some data only needs to stay private for a short time. Other data must stay private for
+            years or decades. Harvest-now-decrypt-later is the risk that encrypted data could be
+            stolen today and decrypted later if quantum capabilities improve.
+          </p>
+          <p>
+            This matters most for organizations with long-lived sensitive data: healthcare, finance,
+            legal, government, defense, research, and intellectual property-heavy businesses.
+          </p>
+
+          <h2>Why a CBOM is the first step</h2>
+          <p>
+            A Cryptographic Bill of Materials, or CBOM, helps a company understand what cryptography
+            it uses and where that cryptography lives. A company cannot migrate cryptography it
+            cannot see.
+          </p>
+          <p>
+            Qyrion starts with CBOMs because inventory comes before migration. The goal is to turn
+            unknown cryptographic exposure into a practical readiness plan.
+          </p>
+
+          <h2>What to do first</h2>
+          <ol>
+            <li>Identify public endpoints and certificates.</li>
+            <li>Create a small CBOM for those assets.</li>
+            <li>Record which systems protect long-lived sensitive data.</li>
+            <li>Assign ownership for cryptographic migration planning.</li>
+            <li>Track changes over time instead of waiting for an emergency.</li>
+          </ol>
+
+          <h2>Qyrion's approach</h2>
+          <p>
+            Qyrion is built around a simple idea: have a plan before you need one. The current
+            prototype creates local CBOM reports and Evidence Packs from public TLS metadata. Future
+            private AI features should run locally or in customer-controlled environments.
+          </p>
+        </article>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <span>Qyrion</span>
+      <span>
+        Questions? <a href="mailto:qyrionsecurity@gmail.com">qyrionsecurity@gmail.com</a>
+      </span>
+    </footer>
+  </body>
+</html>

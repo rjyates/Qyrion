@@ -115,6 +115,62 @@ def severity_for_endpoint(quantum_vulnerable: bool, internet_exposed: bool = Tru
     return "info"
 
 
+def calculate_readiness_score(asset: dict[str, Any], crypto: dict[str, Any]) -> tuple[int, list[dict[str, Any]]]:
+    score = 100
+    factors = []
+
+    if crypto["quantum_vulnerable"]:
+        score -= 45
+        factors.append(
+            {
+                "factor": "public_key_algorithm",
+                "impact": -45,
+                "reason": f"{crypto['algorithm_family']} public-key cryptography should be tracked for post-quantum migration.",
+            }
+        )
+
+    if asset["exposure"]["internet_exposed"]:
+        score -= 10
+        factors.append(
+            {
+                "factor": "internet_exposed",
+                "impact": -10,
+                "reason": "The endpoint is publicly reachable, so cryptographic posture is externally visible.",
+            }
+        )
+
+    tls_version = asset["protocol"]["tls_version"] or "unknown"
+    if tls_version == "TLSv1.3":
+        factors.append(
+            {
+                "factor": "tls_version",
+                "impact": 0,
+                "reason": "TLS 1.3 is modern classical TLS, but it is not automatically post-quantum safe.",
+            }
+        )
+    else:
+        score -= 10
+        factors.append(
+            {
+                "factor": "tls_version",
+                "impact": -10,
+                "reason": f"{tls_version} should be reviewed as part of a broader TLS modernization plan.",
+            }
+        )
+
+    if asset["exposure"]["data_lifetime"] == "unknown":
+        score -= 5
+        factors.append(
+            {
+                "factor": "data_lifetime_unknown",
+                "impact": -5,
+                "reason": "The confidentiality lifetime is unknown, so harvest-now-decrypt-later urgency cannot be ranked yet.",
+            }
+        )
+
+    return max(score, 0), factors
+
+
 def build_cbom(endpoint: dict[str, Any]) -> dict[str, Any]:
     hostname = endpoint["hostname"]
     port = endpoint["port"]
@@ -164,6 +220,7 @@ def build_cbom(endpoint: dict[str, Any]) -> dict[str, Any]:
             }
         ],
     }
+    score, score_factors = calculate_readiness_score(asset, asset["crypto"][0])
 
     findings = []
     if quantum_vulnerable:
@@ -189,10 +246,6 @@ def build_cbom(endpoint: dict[str, Any]) -> dict[str, Any]:
             }
         )
 
-    score = 100
-    if quantum_vulnerable:
-        score -= 45
-
     return {
         "schema_version": SCHEMA_VERSION,
         "generated_at": utc_now(),
@@ -212,6 +265,7 @@ def build_cbom(endpoint: dict[str, Any]) -> dict[str, Any]:
             "quantum_vulnerable_component_count": 1 if quantum_vulnerable else 0,
             "highest_severity": severity,
             "quantum_readiness_score": score,
+            "readiness_score_factors": score_factors,
             "plain_english": (
                 "This asset uses public-key cryptography that should be tracked for "
                 "post-quantum migration. No private data was required to generate this CBOM."
@@ -262,6 +316,13 @@ def write_markdown_report(cbom: dict[str, Any], path: Path) -> None:
         f"- Highest Severity: {summary['highest_severity']}",
         f"- Quantum-Vulnerable Components: {summary['quantum_vulnerable_component_count']}",
         f"- Plain English: {summary['plain_english']}",
+        "",
+        "## Readiness Score Factors",
+        "",
+        *[
+            f"- {factor['factor']} ({factor['impact']}): {factor['reason']}"
+            for factor in summary.get("readiness_score_factors", [])
+        ],
         "",
         "## Cryptographic Component",
         "",
@@ -391,6 +452,13 @@ def write_evidence_pack(cbom: dict[str, Any], path: Path) -> None:
         f"- Cryptographic Components: {summary['crypto_component_count']}",
         f"- Quantum-Vulnerable Components: {summary['quantum_vulnerable_component_count']}",
         "",
+        "## Readiness Score Factors",
+        "",
+        *[
+            f"- {factor['factor']} ({factor['impact']}): {factor['reason']}"
+            for factor in summary.get("readiness_score_factors", [])
+        ],
+        "",
         "## Primary Cryptographic Component",
         "",
         f"- Component Type: {crypto['component_type']}",
@@ -502,7 +570,8 @@ def evidence_command(args: argparse.Namespace) -> int:
     output_dir = Path(args.output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    default_name = f"qyrion-evidence-pack-{safe_filename(cbom_path.stem)}.md"
+    cbom_name = cbom_path.stem.removeprefix("qyrion-cbom-")
+    default_name = f"qyrion-evidence-{safe_filename(cbom_name)}.md"
     evidence_path = Path(args.output) if args.output else output_dir / default_name
     evidence_path.parent.mkdir(parents=True, exist_ok=True)
 

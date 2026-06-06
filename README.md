@@ -31,7 +31,13 @@ python qyrion.py evidence reports/qyrion-cbom-example.com-443.json
 
 That creates:
 
-- `evidence/qyrion-evidence-pack-qyrion-cbom-example.com-443.md`
+- `evidence/qyrion-evidence-example.com-443.md`
+
+Run the smoke test:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/smoke_test.ps1
+```
 
 ## Current Prototype
 
@@ -54,9 +60,17 @@ The first landing page is available at:
 
 `website/index.html`
 
+The first education page is available at:
+
+`website/quantum-security-101.html`
+
 It introduces Qyrion's core message:
 
 Have a plan before you need one.
+
+Temporary contact:
+
+`qyrionsecurity@gmail.com`
 
 ## Privacy Posture
 

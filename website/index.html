@@ -18,6 +18,8 @@
       </a>
       <nav class="nav" aria-label="Primary navigation">
         <a href="#cbom">CBOM</a>
+        <a href="#workflow">Workflow</a>
+        <a href="#evidence">Evidence</a>
         <a href="#academy">Academy</a>
         <a href="#privacy">Privacy</a>
         <a href="#ai-roadmap">AI</a>
@@ -92,6 +94,59 @@
             <h3>Plan</h3>
             <p>Turn CBOM findings into a clear readiness roadmap for leadership, security, engineering, and compliance.</p>
           </article>
+        </div>
+      </section>
+
+      <section class="section workflow" id="workflow">
+        <div class="section-heading">
+          <p class="eyebrow">How it works</p>
+          <h2>From public crypto metadata to a practical readiness plan.</h2>
+        </div>
+        <div class="workflow-steps">
+          <article>
+            <span>01</span>
+            <h3>Scan locally</h3>
+            <p>Qyrion inspects public TLS certificate metadata from the endpoints you choose.</p>
+          </article>
+          <article>
+            <span>02</span>
+            <h3>Generate a CBOM</h3>
+            <p>The scanner creates a local Cryptographic Bill of Materials with a Trust Receipt.</p>
+          </article>
+          <article>
+            <span>03</span>
+            <h3>Create evidence</h3>
+            <p>Qyrion turns CBOM findings into a leadership-friendly Evidence Pack.</p>
+          </article>
+          <article>
+            <span>04</span>
+            <h3>Make the plan</h3>
+            <p>Teams get plain-English next steps before quantum security becomes urgent.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="split-section evidence" id="evidence">
+        <div>
+          <p class="eyebrow">Evidence Pack</p>
+          <h2>Turn technical findings into a business-ready artifact.</h2>
+          <p>
+            Qyrion Evidence Packs translate CBOM output into an executive summary, readiness score,
+            trust receipt, and recommended next steps that leadership, security, engineering, and
+            compliance teams can understand together.
+          </p>
+        </div>
+        <div class="evidence-card" aria-label="Evidence Pack contents">
+          <h3>Evidence Pack includes</h3>
+          <ul>
+            <li>Executive summary</li>
+            <li>CBOM summary</li>
+            <li>Quantum Readiness Score</li>
+            <li>Plain-English risk explanation</li>
+            <li>Recommended next steps</li>
+            <li>Trust Receipt and limits</li>
+          </ul>
+          <pre><code>python qyrion.py evidence reports/qyrion-cbom-example.com-443.json</code></pre>
         </div>
       </section>
 

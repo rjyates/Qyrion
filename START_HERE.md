@@ -179,3 +179,8 @@ useful quantum-security intelligence without exposing sensitive data.
 - website/index.html: first Qyrion landing page prototype.
 - qyrion.py: local CBOM scanner prototype.
 - GIT_SETUP.md: instructions for initializing and managing the project in Git.
+
+## Implemented Features
+
+- Feature 1: Landing page, CBOM explainer, and local public TLS CBOM scanner.
+- Feature 2: Evidence Pack generator from a Qyrion CBOM JSON file.

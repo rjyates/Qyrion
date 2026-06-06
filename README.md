@@ -23,6 +23,16 @@ It scans a public TLS endpoint and creates:
 - `reports/qyrion-cbom-example.com-443.json`
 - `reports/qyrion-cbom-example.com-443.md`
 
+You can turn a CBOM JSON file into a business-friendly evidence pack:
+
+```powershell
+python qyrion.py evidence reports/qyrion-cbom-example.com-443.json
+```
+
+That creates:
+
+- `evidence/qyrion-evidence-pack-qyrion-cbom-example.com-443.md`
+
 ## Current Prototype
 
 Qyrion BlackBox Lite currently reports:
@@ -36,6 +46,7 @@ Qyrion BlackBox Lite currently reports:
 - Quantum Readiness Score
 - Plain-English finding and recommendation
 - Trust Receipt showing what was and was not collected
+- Evidence Pack generation from a CBOM JSON file
 
 ## Website Prototype
 

@@ -33,16 +33,19 @@ form.addEventListener("submit", (event) => {
   if (!isValidDomain(domain)) {
     input.setAttribute("aria-invalid", "true");
     result.hidden = false;
+    result.classList.add("invalid");
     resultDomain.textContent = "Invalid domain";
     resultScore.textContent = "--";
-    resultSummary.textContent = "Enter a public domain like example.com to preview how Qyrion presents a CBOM.";
+    resultSummary.textContent =
+      "Enter a public domain like example.com. This educational form does not scan or contact the domain.";
     return;
   }
 
   input.setAttribute("aria-invalid", "false");
   result.hidden = false;
+  result.classList.remove("invalid");
   resultDomain.textContent = domain;
   resultScore.textContent = previewScore(domain);
   resultSummary.textContent =
-    "This preview shows how Qyrion explains a public TLS CBOM. To generate a real local report, run the scanner command shown below.";
+    "This educational preview shows how Qyrion explains a public TLS CBOM. It did not scan or contact the domain. To generate a real local report, run the scanner command shown below.";
 });

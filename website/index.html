@@ -170,7 +170,7 @@
           </p>
         </div>
         <form class="demo-form" id="cbom-demo-form">
-          <label for="domain-input">Preview a public-domain CBOM</label>
+          <label for="domain-input">Try the CBOM explainer</label>
           <div class="input-row">
             <input
               id="domain-input"
@@ -181,17 +181,17 @@
               placeholder="example.com"
               aria-describedby="demo-note"
             />
-            <button type="submit">Preview</button>
+            <button type="submit">Explain</button>
           </div>
           <p id="demo-note">
-            This browser preview is educational and does not perform a live scan yet. The working
-            local scanner runs from the command line.
+            This website demo is educational only. It does not perform a live scan, contact the
+            domain, or send the domain anywhere. The working local scanner runs from the command line.
           </p>
         </form>
         <div class="demo-result" id="demo-result" hidden>
           <div class="preview-header">
             <span id="result-domain">example.com</span>
-            <span class="status">CBOM preview</span>
+            <span class="status">Educational preview</span>
           </div>
           <div class="score-row">
             <div>
@@ -199,19 +199,20 @@
               <strong id="result-score">55</strong>
             </div>
             <div>
-              <span class="label">Data Used</span>
-              <strong>Public TLS</strong>
+              <span class="label">Live Scan</span>
+              <strong>No</strong>
             </div>
           </div>
           <p id="result-summary">
-            A real scan would inspect public TLS certificate metadata and generate a local CBOM.
+            A real Qyrion scan would inspect public TLS certificate metadata locally and generate a
+            CBOM report. This browser preview only shows how Qyrion explains the result.
           </p>
           <div class="receipt">
             <h3>Trust Receipt</h3>
             <ul>
-              <li>Public TLS metadata only</li>
-              <li>No private keys or source code</li>
-              <li>No external AI used in this preview</li>
+              <li>No live network request from this form</li>
+              <li>No private keys, source code, or logs</li>
+              <li>No external AI or third-party API used</li>
             </ul>
           </div>
         </div>

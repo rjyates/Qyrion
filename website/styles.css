@@ -398,6 +398,10 @@ pre {
   color: var(--muted);
 }
 
+.demo-result.invalid {
+  border-color: rgba(255, 125, 125, 0.72);
+}
+
 .site-footer {
   display: flex;
   justify-content: space-between;

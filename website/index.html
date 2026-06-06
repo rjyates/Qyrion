@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Qyrion | Quantum Security Planning Before You Need It</title>
+    <meta
+      name="description"
+      content="Qyrion creates private Cryptographic Bills of Materials and post-quantum readiness plans without exposing sensitive data to external AI."
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="#top" aria-label="Qyrion home">
+        <span class="brand-mark">Q</span>
+        <span>Qyrion</span>
+      </a>
+      <nav class="nav" aria-label="Primary navigation">
+        <a href="#cbom">CBOM</a>
+        <a href="#academy">Academy</a>
+        <a href="#privacy">Privacy</a>
+        <a href="#ai-roadmap">AI</a>
+        <a href="#plan">Plan</a>
+      </nav>
+    </header>
+
+    <main id="top">
+      <section class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">Private CBOMs for post-quantum readiness</p>
+          <h1>Have a quantum security plan before you need one.</h1>
+          <p class="hero-text">
+            Qyrion helps businesses create private Cryptographic Bills of Materials, understand
+            quantum exposure, and build practical migration plans without uploading sensitive data.
+          </p>
+          <div class="hero-actions">
+            <a class="button primary" href="#plan">Start with the plan</a>
+            <a class="button secondary" href="#academy">Learn the basics</a>
+          </div>
+        </div>
+
+        <aside class="product-preview" aria-label="Qyrion CBOM report preview">
+          <div class="preview-header">
+            <span>Qyrion CBOM</span>
+            <span class="status">Local report</span>
+          </div>
+          <div class="score-row">
+            <div>
+              <span class="label">Readiness Score</span>
+              <strong>55</strong>
+            </div>
+            <div>
+              <span class="label">Highest Severity</span>
+              <strong>Medium</strong>
+            </div>
+          </div>
+          <div class="finding">
+            <span class="tag">Finding</span>
+            <h2>ECC certificate needs PQC tracking</h2>
+            <p>
+              This endpoint uses public-key cryptography that should be tracked for post-quantum
+              migration.
+            </p>
+          </div>
+          <div class="receipt">
+            <h3>Trust Receipt</h3>
+            <ul>
+              <li>No private keys collected</li>
+              <li>No source code uploaded</li>
+              <li>No external AI used</li>
+            </ul>
+          </div>
+        </aside>
+      </section>
+
+      <section class="section" id="cbom">
+        <div class="section-heading">
+          <p class="eyebrow">Cryptographic Bill of Materials</p>
+          <h2>You cannot migrate cryptography you cannot see.</h2>
+        </div>
+        <div class="feature-grid">
+          <article>
+            <h3>Inventory</h3>
+            <p>Map algorithms, certificates, key types, TLS posture, signing systems, and cryptographic dependencies.</p>
+          </article>
+          <article>
+            <h3>Prioritize</h3>
+            <p>Rank assets by quantum exposure, business importance, data sensitivity, and confidentiality lifetime.</p>
+          </article>
+          <article>
+            <h3>Plan</h3>
+            <p>Turn CBOM findings into a clear readiness roadmap for leadership, security, engineering, and compliance.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="split-section" id="academy">
+        <div>
+          <p class="eyebrow">Qyrion Academy</p>
+          <h2>Quantum security without the panic.</h2>
+          <p>
+            Qyrion teaches one concept at a time through short, plain-English videos and guides:
+            what quantum cybersecurity means, why harvest-now-decrypt-later matters, and how a
+            CBOM helps teams prepare.
+          </p>
+        </div>
+        <div class="video-list" aria-label="Planned education videos">
+          <span>What is quantum cybersecurity?</span>
+          <span>What is harvest now, decrypt later?</span>
+          <span>What is a CBOM?</span>
+          <span>Why plan before you need a fix?</span>
+        </div>
+      </section>
+
+      <section class="section privacy" id="privacy">
+        <div class="section-heading">
+          <p class="eyebrow">Private by design</p>
+          <h2>Useful security intelligence without unnecessary exposure.</h2>
+        </div>
+        <div class="privacy-list">
+          <div>
+            <strong>Local-first scanning</strong>
+            <span>Start with public TLS metadata and expand inside customer-controlled environments.</span>
+          </div>
+          <div>
+            <strong>Trust receipts</strong>
+            <span>Every report explains what was used, what was not collected, and whether external AI was involved.</span>
+          </div>
+          <div>
+            <strong>Private AI-ready path</strong>
+            <span>Future AI analysis should run locally, in a private cloud, or in air-gapped deployments for sensitive teams.</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="split-section ai-roadmap" id="ai-roadmap">
+        <div>
+          <p class="eyebrow">AI roadmap</p>
+          <h2>Private today. AI-ready by design.</h2>
+          <p>
+            The current prototype does not send findings to external AI. The next AI layer should
+            explain risk from sanitized CBOM metadata, then support local or customer-controlled
+            model deployment when the product is ready.
+          </p>
+        </div>
+        <div class="privacy-list compact">
+          <div>
+            <strong>Now</strong>
+            <span>Local CBOM reports from public TLS metadata. No external AI used.</span>
+          </div>
+          <div>
+            <strong>Next</strong>
+            <span>Template-based readiness plans and evidence packs generated from CBOM findings.</span>
+          </div>
+          <div>
+            <strong>Later</strong>
+            <span>Private AI summaries running locally, in customer cloud, or in air-gapped environments.</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section plan" id="plan">
+        <div class="section-heading">
+          <p class="eyebrow">First step</p>
+          <h2>Start with a small, private CBOM.</h2>
+          <p>
+            Qyrion BlackBox Lite generates local CBOM reports for public TLS endpoints. It is the
+            first step toward readiness scoring, evidence packs, vendor risk, and continuous monitoring.
+          </p>
+        </div>
+        <form class="demo-form" id="cbom-demo-form">
+          <label for="domain-input">Preview a public-domain CBOM</label>
+          <div class="input-row">
+            <input
+              id="domain-input"
+              name="domain"
+              type="text"
+              inputmode="url"
+              autocomplete="off"
+              placeholder="example.com"
+              aria-describedby="demo-note"
+            />
+            <button type="submit">Preview</button>
+          </div>
+          <p id="demo-note">
+            This browser preview is educational and does not perform a live scan yet. The working
+            local scanner runs from the command line.
+          </p>
+        </form>
+        <div class="demo-result" id="demo-result" hidden>
+          <div class="preview-header">
+            <span id="result-domain">example.com</span>
+            <span class="status">CBOM preview</span>
+          </div>
+          <div class="score-row">
+            <div>
+              <span class="label">Readiness Score</span>
+              <strong id="result-score">55</strong>
+            </div>
+            <div>
+              <span class="label">Data Used</span>
+              <strong>Public TLS</strong>
+            </div>
+          </div>
+          <p id="result-summary">
+            A real scan would inspect public TLS certificate metadata and generate a local CBOM.
+          </p>
+          <div class="receipt">
+            <h3>Trust Receipt</h3>
+            <ul>
+              <li>Public TLS metadata only</li>
+              <li>No private keys or source code</li>
+              <li>No external AI used in this preview</li>
+            </ul>
+          </div>
+        </div>
+        <pre><code>python qyrion.py cbom example.com openai.com cloudflare.com</code></pre>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <span>Qyrion</span>
+      <span>Private CBOMs and quantum security planning.</span>
+    </footer>
+    <script src="script.js"></script>
+  </body>
+</html>

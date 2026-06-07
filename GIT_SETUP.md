@@ -1,32 +1,29 @@
 # Qyrion Git Setup
 
-Git is not currently available in this environment, but the project is ready to be managed as a Git repository.
+Git for Windows is installed for this user account.
 
-## Install Git
-
-Download Git for Windows:
-
-https://git-scm.com/download/win
-
-After installing, reopen the terminal or Codex app so `git` is available on the PATH.
-
-Check:
+After opening a new terminal, check:
 
 ```powershell
 git --version
 ```
 
-## Initialize The Repository
+## Repository Status
 
-From the Qyrion folder:
+The Qyrion folder is already initialized as a Git repository. Check the current branch with:
+
+```powershell
+git branch --show-current
+```
+
+From the Qyrion folder, check current changes with:
 
 ```powershell
 cd C:\Users\reyya\OneDrive\Documents\Qyrion
-git init
 git status
 ```
 
-## First Commit
+## Commit Current Work
 
 ```powershell
 git add .gitignore README.md START_HERE.md CBOM_SCHEMA.md PROTECTION_AND_NEXT_STEPS.md INVENTION_LOG.md EDUCATION_STRATEGY.md VIDEO_SCRIPTS.md BUSINESS_STRENGTHENERS.md qyrion.py website

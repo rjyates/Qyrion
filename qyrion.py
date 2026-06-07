@@ -7,6 +7,7 @@ import argparse
 import datetime as dt
 import json
 import re
+import shutil
 import socket
 import ssl
 import subprocess
@@ -28,38 +29,97 @@ def safe_filename(value: str) -> str:
     return re.sub(r"[^A-Za-z0-9._-]+", "_", value).strip("_")
 
 
-def run_openssl_x509(der_cert: bytes) -> str:
+def run_certificate_dump(der_cert: bytes) -> str:
     with tempfile.NamedTemporaryFile(suffix=".der", delete=False) as temp_file:
         temp_path = Path(temp_file.name)
         temp_file.write(der_cert)
 
     try:
-        result = subprocess.run(
-            ["openssl", "x509", "-inform", "DER", "-in", str(temp_path), "-noout", "-text"],
-            capture_output=True,
-            check=True,
-        )
-        return result.stdout.decode("utf-8", errors="replace")
+        openssl = shutil.which("openssl")
+        if openssl:
+            result = subprocess.run(
+                [openssl, "x509", "-inform", "DER", "-in", str(temp_path), "-noout", "-text"],
+                capture_output=True,
+                check=True,
+            )
+            return result.stdout.decode("utf-8", errors="replace")
+
+        certutil = shutil.which("certutil")
+        if certutil:
+            result = subprocess.run(
+                [certutil, "-dump", str(temp_path)],
+                capture_output=True,
+                check=True,
+            )
+            return result.stdout.decode("utf-8", errors="replace")
+
+        raise RuntimeError("Qyrion needs either OpenSSL or Windows certutil to parse certificate metadata.")
     finally:
         temp_path.unlink(missing_ok=True)
 
 
-def first_match(pattern: str, text: str) -> str | None:
-    match = re.search(pattern, text, re.MULTILINE)
-    return match.group(1).strip() if match else None
+def run_openssl_x509(der_cert: bytes) -> str:
+    return run_certificate_dump(der_cert)
+
+
+def normalize_signature_algorithm(raw_value: str | None) -> str | None:
+    if not raw_value:
+        return None
+
+    value = raw_value.strip()
+    if " " in value:
+        return value.rsplit(" ", 1)[-1]
+    return value
+
+
+def certutil_public_key_algorithm(cert_text: str) -> str | None:
+    object_id = first_match(
+        r"Public Key Algorithm:[^\S\r\n]*\r?\n[^\S\r\n]*Algorithm ObjectId:[^\S\r\n]*[0-9.]+[^\S\r\n]+(.+)",
+        cert_text,
+    )
+    if object_id:
+        value = object_id.strip()
+        if "ECC" in value:
+            return "id-ecPublicKey"
+        if "RSA" in value:
+            return "rsaEncryption"
+        return value
+
+    return first_match(r"Public Key Algorithm:[^\S\r\n]*(.+)", cert_text)
+
+
+def certutil_key_size(cert_text: str) -> str | None:
+    return first_match(r"Public Key Length:[^\S\r\n]*(\d+)[^\S\r\n]*bits?", cert_text)
+
+
+def certutil_signature_algorithm(cert_text: str) -> str | None:
+    raw_value = first_match(
+        r"Signature Algorithm:[^\S\r\n]*\r?\n[^\S\r\n]*Algorithm ObjectId:[^\S\r\n]*[0-9.]+[^\S\r\n]+(.+)",
+        cert_text,
+    )
+    return normalize_signature_algorithm(raw_value)
 
 
 def parse_certificate_text(cert_text: str) -> dict[str, Any]:
-    public_key_algorithm = first_match(r"Public Key Algorithm:\s*(.+)", cert_text)
-    public_key_bits_raw = first_match(r"Public-Key:\s*\((\d+) bit\)", cert_text)
-    signature_algorithm = first_match(r"Signature Algorithm:\s*(.+)", cert_text)
+    public_key_algorithm = first_match(r"Public Key Algorithm:[^\S\r\n]*(.+)", cert_text)
+    public_key_bits_raw = first_match(r"Public-Key:[^\S\r\n]*\((\d+) bit\)", cert_text)
+    signature_algorithm = first_match(r"Signature Algorithm:[^\S\r\n]*(.+)", cert_text)
+
+    if not public_key_algorithm:
+        public_key_algorithm = certutil_public_key_algorithm(cert_text)
+    if not public_key_bits_raw:
+        public_key_bits_raw = certutil_key_size(cert_text)
+    if not signature_algorithm:
+        signature_algorithm = certutil_signature_algorithm(cert_text)
+
+    signature_algorithm = normalize_signature_algorithm(signature_algorithm)
 
     algorithm_family = "unknown"
     if public_key_algorithm:
         lower = public_key_algorithm.lower()
         if "rsa" in lower:
             algorithm_family = "RSA"
-        elif "ec" in lower or "id-ecpublickey" in lower:
+        elif "ec" in lower or "ecc" in lower or "id-ecpublickey" in lower:
             algorithm_family = "ECC"
         elif "dsa" in lower:
             algorithm_family = "DSA"
@@ -70,6 +130,11 @@ def parse_certificate_text(cert_text: str) -> dict[str, Any]:
         "key_size_bits": int(public_key_bits_raw) if public_key_bits_raw else None,
         "signature_algorithm": signature_algorithm or "unknown",
     }
+
+
+def first_match(pattern: str, text: str) -> str | None:
+    match = re.search(pattern, text, re.MULTILINE)
+    return match.group(1).strip() if match else None
 
 
 def get_tls_endpoint(hostname: str, port: int) -> dict[str, Any]:

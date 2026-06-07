@@ -12,6 +12,12 @@ The first prototype is intentionally small:
 python qyrion.py cbom example.com
 ```
 
+If `python` is not available on PATH in Codex, use the bundled runtime:
+
+```powershell
+& "$env:USERPROFILE\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe" qyrion.py cbom example.com
+```
+
 You can also scan multiple public TLS endpoints:
 
 ```powershell
@@ -53,6 +59,8 @@ Qyrion BlackBox Lite currently reports:
 - Plain-English finding and recommendation
 - Trust Receipt showing what was and was not collected
 - Evidence Pack generation from a CBOM JSON file
+
+On Windows, certificate parsing can use the built-in `certutil` command. If OpenSSL is installed, Qyrion will use it automatically.
 
 ## Website Prototype
 

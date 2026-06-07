@@ -49,6 +49,16 @@ That creates:
 
 - `diffs/qyrion-diff-example.com-443-to-openai.com-443.md`
 
+You can evaluate a CBOM against Qyrion's prototype policy rules:
+
+```powershell
+python qyrion.py policy reports/qyrion-cbom-example.com-443.json
+```
+
+That creates:
+
+- `policy/qyrion-policy-example.com-443.md`
+
 Run the smoke test:
 
 ```powershell
@@ -70,6 +80,7 @@ Qyrion BlackBox Lite currently reports:
 - Trust Receipt showing what was and was not collected
 - Evidence Pack generation from a CBOM JSON file
 - CBOM diff reports for tracking cryptographic posture changes over time
+- Prototype policy reports for governance-style CBOM checks
 
 On Windows, certificate parsing can use the built-in `certutil` command. If OpenSSL is installed, Qyrion will use it automatically.
 

@@ -376,6 +376,33 @@ h3 {
   color: var(--muted);
 }
 
+.policy-section {
+  background: #080d12;
+}
+
+.policy-card {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 20px;
+  background: linear-gradient(180deg, var(--panel-strong), var(--panel));
+}
+
+.policy-card ul {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding-left: 20px;
+  color: var(--muted);
+}
+
+.policy-card strong {
+  color: var(--silver);
+}
+
+.policy-card pre {
+  margin-top: 20px;
+}
+
 .education-hero {
   min-height: 520px;
 }

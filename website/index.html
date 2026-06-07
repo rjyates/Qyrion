@@ -21,6 +21,7 @@
         <a href="#workflow">Workflow</a>
         <a href="#evidence">Evidence</a>
         <a href="#history">History</a>
+        <a href="#policy">Policy</a>
         <a href="quantum-security-101.html">Academy</a>
         <a href="#privacy">Privacy</a>
         <a href="#ai-roadmap">AI</a>
@@ -175,6 +176,26 @@
           </article>
         </div>
         <pre><code>python qyrion.py diff before.json after.json</code></pre>
+      </section>
+
+      <section class="split-section policy-section" id="policy">
+        <div>
+          <p class="eyebrow">Policy checks</p>
+          <h2>Turn CBOMs into governance signals.</h2>
+          <p>
+            Qyrion policy reports flag prototype rules for quantum-vulnerable public-key crypto,
+            unknown data lifetime, internet exposure, TLS posture, and scoring evidence.
+          </p>
+        </div>
+        <div class="policy-card">
+          <h3>Prototype policy outcomes</h3>
+          <ul>
+            <li><strong>Pass:</strong> no action needed for the current rule.</li>
+            <li><strong>Warn:</strong> review and add planning context.</li>
+            <li><strong>Fail:</strong> include in the quantum-readiness plan.</li>
+          </ul>
+          <pre><code>python qyrion.py policy reports/qyrion-cbom-example.com-443.json</code></pre>
+        </div>
       </section>
 
       <section class="split-section" id="academy">

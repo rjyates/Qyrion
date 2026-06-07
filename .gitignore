@@ -12,6 +12,7 @@ env/
 reports/
 evidence/
 diffs/
+policy/
 
 # OS/editor files
 .DS_Store

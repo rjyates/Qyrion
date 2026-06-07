@@ -186,3 +186,4 @@ useful quantum-security intelligence without exposing sensitive data.
 - Feature 2: Evidence Pack generator from a Qyrion CBOM JSON file.
 - Feature 3: Quantum Security 101 education page and smoke-test script.
 - Feature 4: CBOM diff reports for tracking cryptographic posture changes over time.
+- Feature 5: Prototype CBOM policy reports for governance-style readiness checks.

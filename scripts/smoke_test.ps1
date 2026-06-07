@@ -30,6 +30,7 @@ Write-Host "Checking Qyrion CLI..."
 & $python qyrion.py cbom --help | Out-Null
 & $python qyrion.py evidence --help | Out-Null
 & $python qyrion.py diff --help | Out-Null
+& $python qyrion.py policy --help | Out-Null
 
 Write-Host "Checking website files..."
 $requiredFiles = @(
@@ -49,6 +50,8 @@ $sampleCbom = Get-ChildItem -Path "reports" -Filter "qyrion-cbom-*.json" -ErrorA
 if ($sampleCbom) {
   Write-Host "Checking evidence pack generation with $($sampleCbom.Name)..."
   & $python qyrion.py evidence $sampleCbom.FullName | Out-Null
+  Write-Host "Checking policy report generation with $($sampleCbom.Name)..."
+  & $python qyrion.py policy $sampleCbom.FullName | Out-Null
 }
 
 $sampleCboms = @(Get-ChildItem -Path "reports" -Filter "qyrion-cbom-*.json" -ErrorAction SilentlyContinue | Select-Object -First 2)

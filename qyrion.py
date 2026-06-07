@@ -749,6 +749,160 @@ def write_cbom_diff(before_cbom: dict[str, Any], after_cbom: dict[str, Any], pat
     path.write_text("\n".join(lines), encoding="utf-8")
 
 
+def evaluate_policy(cbom: dict[str, Any]) -> list[dict[str, Any]]:
+    asset = first_asset(cbom)
+    crypto = first_crypto(asset)
+    summary = cbom["summary"]
+    exposure = asset["exposure"]
+    protocol = asset["protocol"]
+
+    checks = []
+
+    checks.append(
+        {
+            "rule_id": "QYR-PQC-001",
+            "title": "Track quantum-vulnerable public-key cryptography",
+            "status": "fail" if crypto["quantum_vulnerable"] else "pass",
+            "severity": "medium" if crypto["quantum_vulnerable"] else "info",
+            "reason": (
+                f"{crypto['algorithm_family']} public-key cryptography should be tracked for post-quantum migration."
+                if crypto["quantum_vulnerable"]
+                else "No quantum-vulnerable public-key cryptography was identified by this CBOM."
+            ),
+            "recommendation": "Keep this asset in the CBOM and include it in post-quantum migration planning.",
+        }
+    )
+
+    checks.append(
+        {
+            "rule_id": "QYR-PQC-002",
+            "title": "Record confidentiality lifetime",
+            "status": "warn" if exposure.get("data_lifetime") == "unknown" else "pass",
+            "severity": "medium" if exposure.get("data_lifetime") == "unknown" else "info",
+            "reason": (
+                "Data confidentiality lifetime is unknown, so harvest-now-decrypt-later urgency cannot be ranked."
+                if exposure.get("data_lifetime") == "unknown"
+                else f"Data confidentiality lifetime is recorded as {exposure.get('data_lifetime')}."
+            ),
+            "recommendation": "Ask the asset owner how long protected data must remain confidential.",
+        }
+    )
+
+    checks.append(
+        {
+            "rule_id": "QYR-PQC-003",
+            "title": "Review internet-exposed cryptography",
+            "status": "warn" if exposure.get("internet_exposed") else "pass",
+            "severity": "low" if exposure.get("internet_exposed") else "info",
+            "reason": (
+                "This endpoint is internet-exposed, so its public cryptographic posture is externally visible."
+                if exposure.get("internet_exposed")
+                else "This asset is not marked as internet-exposed."
+            ),
+            "recommendation": "Prioritize ownership, monitoring, and renewal tracking for internet-exposed assets.",
+        }
+    )
+
+    checks.append(
+        {
+            "rule_id": "QYR-TLS-001",
+            "title": "Use modern TLS posture",
+            "status": "pass" if protocol.get("tls_version") == "TLSv1.3" else "warn",
+            "severity": "low" if protocol.get("tls_version") != "TLSv1.3" else "info",
+            "reason": (
+                "TLS 1.3 is present. This is modern classical TLS, though not automatically post-quantum safe."
+                if protocol.get("tls_version") == "TLSv1.3"
+                else f"{protocol.get('tls_version') or 'unknown TLS'} should be reviewed as part of TLS modernization."
+            ),
+            "recommendation": "Track TLS version as part of the broader post-quantum readiness roadmap.",
+        }
+    )
+
+    checks.append(
+        {
+            "rule_id": "QYR-GOV-001",
+            "title": "Maintain readiness scoring evidence",
+            "status": "pass" if summary.get("readiness_score_factors") else "warn",
+            "severity": "low",
+            "reason": (
+                "Readiness score factors are present and explain how the score was produced."
+                if summary.get("readiness_score_factors")
+                else "Readiness score factors are missing, making the score harder to explain."
+            ),
+            "recommendation": "Keep score factors in generated CBOMs so leadership can understand risk changes.",
+        }
+    )
+
+    return checks
+
+
+def policy_summary(checks: list[dict[str, Any]]) -> dict[str, Any]:
+    counts = {"pass": 0, "warn": 0, "fail": 0}
+    for check in checks:
+        counts[check["status"]] += 1
+
+    if counts["fail"]:
+        outcome = "attention_required"
+    elif counts["warn"]:
+        outcome = "review_recommended"
+    else:
+        outcome = "passing"
+
+    return {"outcome": outcome, **counts}
+
+
+def write_policy_report(cbom: dict[str, Any], path: Path) -> None:
+    asset = first_asset(cbom)
+    checks = evaluate_policy(cbom)
+    summary = policy_summary(checks)
+
+    lines = [
+        "# Qyrion CBOM Policy Report",
+        "",
+        "## Summary",
+        "",
+        f"- Asset: {asset['name']}",
+        f"- Outcome: {summary['outcome']}",
+        f"- Passed: {summary['pass']}",
+        f"- Warnings: {summary['warn']}",
+        f"- Failed: {summary['fail']}",
+        "",
+        "## Plain-English Interpretation",
+        "",
+    ]
+
+    if summary["outcome"] == "attention_required":
+        lines.append("This CBOM has policy failures that should be reviewed as part of the quantum-readiness plan.")
+    elif summary["outcome"] == "review_recommended":
+        lines.append("This CBOM has warnings that should be reviewed, but no policy failures were detected.")
+    else:
+        lines.append("This CBOM passes the current Qyrion policy checks.")
+
+    lines.extend(["", "## Policy Checks", ""])
+    for check in checks:
+        lines.extend(
+            [
+                f"### {check['rule_id']}: {check['title']}",
+                "",
+                f"- Status: {check['status']}",
+                f"- Severity: {check['severity']}",
+                f"- Reason: {check['reason']}",
+                f"- Recommendation: {check['recommendation']}",
+                "",
+            ]
+        )
+
+    lines.extend(
+        [
+            "## Limits",
+            "",
+            "This policy report applies Qyrion's current prototype rules to one CBOM file. It is not a full compliance attestation, legal opinion, or production security certification.",
+        ]
+    )
+
+    path.write_text("\n".join(lines), encoding="utf-8")
+
+
 def scan_hostname(hostname: str, port: int, output_dir: Path) -> dict[str, Any]:
     endpoint = get_tls_endpoint(hostname, port)
     cbom = build_cbom(endpoint)
@@ -834,6 +988,23 @@ def diff_command(args: argparse.Namespace) -> int:
     return 0
 
 
+def policy_command(args: argparse.Namespace) -> int:
+    cbom_path = Path(args.cbom_json)
+    cbom = json.loads(cbom_path.read_text(encoding="utf-8"))
+
+    output_dir = Path(args.output_dir)
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    cbom_name = cbom_path.stem.removeprefix("qyrion-cbom-")
+    default_name = f"qyrion-policy-{safe_filename(cbom_name)}.md"
+    policy_path = Path(args.output) if args.output else output_dir / default_name
+    policy_path.parent.mkdir(parents=True, exist_ok=True)
+
+    write_policy_report(cbom, policy_path)
+    print(f"Policy report: {policy_path}")
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Qyrion local CBOM scanner")
     subparsers = parser.add_subparsers(dest="command", required=True)
@@ -856,6 +1027,12 @@ def build_parser() -> argparse.ArgumentParser:
     diff_parser.add_argument("--output-dir", default="diffs", help="Directory for generated diff reports")
     diff_parser.add_argument("--output", help="Optional exact output Markdown path")
     diff_parser.set_defaults(func=diff_command)
+
+    policy_parser = subparsers.add_parser("policy", help="Evaluate a Qyrion CBOM against prototype policy rules")
+    policy_parser.add_argument("cbom_json", help="Path to a Qyrion CBOM JSON file")
+    policy_parser.add_argument("--output-dir", default="policy", help="Directory for generated policy reports")
+    policy_parser.add_argument("--output", help="Optional exact output Markdown path")
+    policy_parser.set_defaults(func=policy_command)
 
     return parser
 

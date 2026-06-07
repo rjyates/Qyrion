@@ -29,6 +29,7 @@ Write-Host "Checking Qyrion CLI..."
 & $python qyrion.py --help | Out-Null
 & $python qyrion.py cbom --help | Out-Null
 & $python qyrion.py evidence --help | Out-Null
+& $python qyrion.py diff --help | Out-Null
 
 Write-Host "Checking website files..."
 $requiredFiles = @(
@@ -48,6 +49,12 @@ $sampleCbom = Get-ChildItem -Path "reports" -Filter "qyrion-cbom-*.json" -ErrorA
 if ($sampleCbom) {
   Write-Host "Checking evidence pack generation with $($sampleCbom.Name)..."
   & $python qyrion.py evidence $sampleCbom.FullName | Out-Null
+}
+
+$sampleCboms = @(Get-ChildItem -Path "reports" -Filter "qyrion-cbom-*.json" -ErrorAction SilentlyContinue | Select-Object -First 2)
+if ($sampleCboms.Count -ge 2) {
+  Write-Host "Checking CBOM diff generation..."
+  & $python qyrion.py diff $sampleCboms[0].FullName $sampleCboms[1].FullName | Out-Null
 }
 
 Write-Host "Qyrion smoke test passed."

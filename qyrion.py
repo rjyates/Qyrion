@@ -580,6 +580,175 @@ def write_evidence_pack(cbom: dict[str, Any], path: Path) -> None:
     path.write_text("\n".join(lines), encoding="utf-8")
 
 
+def crypto_snapshot(cbom: dict[str, Any]) -> dict[str, Any]:
+    asset = first_asset(cbom)
+    crypto = first_crypto(asset)
+    summary = cbom["summary"]
+
+    return {
+        "asset_name": asset["name"],
+        "asset_type": asset["asset_type"],
+        "tls_version": asset["protocol"]["tls_version"],
+        "cipher_suite": asset["protocol"]["cipher_suite"],
+        "algorithm_family": crypto["algorithm_family"],
+        "algorithm": crypto["algorithm"],
+        "key_size_bits": crypto["key_size_bits"],
+        "signature_algorithm": crypto["signature_algorithm"],
+        "quantum_vulnerable": crypto["quantum_vulnerable"],
+        "valid_until": crypto["validity"]["not_after"],
+        "score": summary["quantum_readiness_score"],
+        "highest_severity": summary["highest_severity"],
+        "quantum_vulnerable_count": summary["quantum_vulnerable_component_count"],
+    }
+
+
+def compare_snapshots(before: dict[str, Any], after: dict[str, Any]) -> list[dict[str, Any]]:
+    fields = [
+        ("asset_name", "Asset"),
+        ("score", "Quantum Readiness Score"),
+        ("highest_severity", "Highest Severity"),
+        ("tls_version", "TLS Version"),
+        ("cipher_suite", "Cipher Suite"),
+        ("algorithm_family", "Algorithm Family"),
+        ("algorithm", "Algorithm"),
+        ("key_size_bits", "Key Size"),
+        ("signature_algorithm", "Signature Algorithm"),
+        ("quantum_vulnerable", "Quantum Vulnerable"),
+        ("valid_until", "Certificate Valid Until"),
+        ("quantum_vulnerable_count", "Quantum-Vulnerable Components"),
+    ]
+
+    changes = []
+    for key, label in fields:
+        if before.get(key) != after.get(key):
+            changes.append(
+                {
+                    "field": key,
+                    "label": label,
+                    "before": before.get(key),
+                    "after": after.get(key),
+                }
+            )
+    return changes
+
+
+def diff_outcome(before: dict[str, Any], after: dict[str, Any], changes: list[dict[str, Any]]) -> str:
+    if before["asset_name"] != after["asset_name"]:
+        return "different_assets"
+
+    score_delta = after["score"] - before["score"]
+    vulnerable_delta = after["quantum_vulnerable_count"] - before["quantum_vulnerable_count"]
+
+    if score_delta > 0 and vulnerable_delta <= 0:
+        return "improved"
+    if score_delta < 0 or vulnerable_delta > 0:
+        return "worsened"
+    if changes:
+        return "changed"
+    return "unchanged"
+
+
+def write_cbom_diff(before_cbom: dict[str, Any], after_cbom: dict[str, Any], path: Path) -> None:
+    before = crypto_snapshot(before_cbom)
+    after = crypto_snapshot(after_cbom)
+    changes = compare_snapshots(before, after)
+    outcome = diff_outcome(before, after, changes)
+    score_delta = after["score"] - before["score"]
+
+    lines = [
+        "# Qyrion CBOM Diff Report",
+        "",
+        "## Summary",
+        "",
+        f"- Before Asset: {before['asset_name']}",
+        f"- After Asset: {after['asset_name']}",
+        f"- Outcome: {outcome}",
+        f"- Score Change: {score_delta:+}",
+        f"- Before Score: {before['score']}",
+        f"- After Score: {after['score']}",
+        "",
+        "## Plain-English Interpretation",
+        "",
+    ]
+
+    if outcome == "different_assets":
+        lines.append("These CBOMs are for different assets. Treat this as a comparison, not proof that one asset improved over time.")
+    elif outcome == "improved":
+        lines.append("The later CBOM appears to reduce quantum-readiness risk based on the current Qyrion scoring model.")
+    elif outcome == "worsened":
+        lines.append("The later CBOM appears to increase quantum-readiness risk and should be reviewed before being treated as progress.")
+    elif outcome == "changed":
+        lines.append("The cryptographic posture changed, but the current Qyrion score did not clearly improve or worsen.")
+    else:
+        lines.append("No tracked cryptographic changes were detected between these CBOM files.")
+
+    lines.extend(
+        [
+            "",
+            "## Detected Changes",
+            "",
+        ]
+    )
+
+    if changes:
+        for change in changes:
+            lines.append(f"- {change['label']}: `{change['before']}` -> `{change['after']}`")
+    else:
+        lines.append("- No tracked changes.")
+
+    lines.extend(
+        [
+            "",
+            "## Recommended Next Steps",
+            "",
+        ]
+    )
+
+    if outcome == "different_assets":
+        lines.extend(
+            [
+                "1. Compare assets only when the business goal is side-by-side prioritization.",
+                "2. For historical tracking, compare two CBOMs from the same asset at different times.",
+                "3. Use the detected changes to decide which asset needs more planning context.",
+            ]
+        )
+    elif outcome == "worsened":
+        lines.extend(
+            [
+                "1. Review why the newer CBOM reduced the readiness score or added quantum-vulnerable exposure.",
+                "2. Confirm whether the change came from certificate renewal, infrastructure change, or scanner input differences.",
+                "3. Add this asset to the migration plan if it protects sensitive or long-lived data.",
+            ]
+        )
+    elif outcome == "improved":
+        lines.extend(
+            [
+                "1. Record the improvement in the asset's quantum-readiness history.",
+                "2. Confirm the change is expected and stable after certificate or infrastructure updates.",
+                "3. Continue monitoring this asset after renewals and releases.",
+            ]
+        )
+    else:
+        lines.extend(
+            [
+                "1. Keep both CBOMs as a historical record.",
+                "2. Re-run comparison after future certificate renewals or infrastructure changes.",
+                "3. Add business context such as data sensitivity and confidentiality lifetime when available.",
+            ]
+        )
+
+    lines.extend(
+        [
+            "",
+            "## Limits",
+            "",
+            "This diff compares Qyrion CBOM metadata fields. It is not a full security audit, compliance attestation, or proof that production cryptography is safe.",
+        ]
+    )
+
+    path.write_text("\n".join(lines), encoding="utf-8")
+
+
 def scan_hostname(hostname: str, port: int, output_dir: Path) -> dict[str, Any]:
     endpoint = get_tls_endpoint(hostname, port)
     cbom = build_cbom(endpoint)
@@ -645,6 +814,26 @@ def evidence_command(args: argparse.Namespace) -> int:
     return 0
 
 
+def diff_command(args: argparse.Namespace) -> int:
+    before_path = Path(args.before_cbom_json)
+    after_path = Path(args.after_cbom_json)
+    before_cbom = json.loads(before_path.read_text(encoding="utf-8"))
+    after_cbom = json.loads(after_path.read_text(encoding="utf-8"))
+
+    output_dir = Path(args.output_dir)
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    before_name = before_path.stem.removeprefix("qyrion-cbom-")
+    after_name = after_path.stem.removeprefix("qyrion-cbom-")
+    default_name = f"qyrion-diff-{safe_filename(before_name)}-to-{safe_filename(after_name)}.md"
+    diff_path = Path(args.output) if args.output else output_dir / default_name
+    diff_path.parent.mkdir(parents=True, exist_ok=True)
+
+    write_cbom_diff(before_cbom, after_cbom, diff_path)
+    print(f"CBOM diff: {diff_path}")
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Qyrion local CBOM scanner")
     subparsers = parser.add_subparsers(dest="command", required=True)
@@ -660,6 +849,13 @@ def build_parser() -> argparse.ArgumentParser:
     evidence_parser.add_argument("--output-dir", default="evidence", help="Directory for generated evidence packs")
     evidence_parser.add_argument("--output", help="Optional exact output Markdown path")
     evidence_parser.set_defaults(func=evidence_command)
+
+    diff_parser = subparsers.add_parser("diff", help="Compare two Qyrion CBOM JSON files")
+    diff_parser.add_argument("before_cbom_json", help="Path to the earlier Qyrion CBOM JSON file")
+    diff_parser.add_argument("after_cbom_json", help="Path to the later Qyrion CBOM JSON file")
+    diff_parser.add_argument("--output-dir", default="diffs", help="Directory for generated diff reports")
+    diff_parser.add_argument("--output", help="Optional exact output Markdown path")
+    diff_parser.set_defaults(func=diff_command)
 
     return parser
 

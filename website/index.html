@@ -20,6 +20,7 @@
         <a href="#cbom">CBOM</a>
         <a href="#workflow">Workflow</a>
         <a href="#evidence">Evidence</a>
+        <a href="#history">History</a>
         <a href="quantum-security-101.html">Academy</a>
         <a href="#privacy">Privacy</a>
         <a href="#ai-roadmap">AI</a>
@@ -148,6 +149,32 @@
           </ul>
           <pre><code>python qyrion.py evidence reports/qyrion-cbom-example.com-443.json</code></pre>
         </div>
+      </section>
+
+      <section class="section history" id="history">
+        <div class="section-heading">
+          <p class="eyebrow">CBOM history</p>
+          <h2>Track whether quantum readiness is improving or drifting.</h2>
+          <p>
+            Qyrion can compare two CBOM files and explain what changed: readiness score, certificate
+            details, TLS posture, algorithms, and quantum-vulnerable exposure.
+          </p>
+        </div>
+        <div class="history-grid">
+          <article>
+            <h3>Improved</h3>
+            <p>Show when a new CBOM reduces exposure or improves the readiness score.</p>
+          </article>
+          <article>
+            <h3>Worsened</h3>
+            <p>Flag when changes add quantum-vulnerable exposure or lower the readiness score.</p>
+          </article>
+          <article>
+            <h3>Changed</h3>
+            <p>Record certificate, TLS, and algorithm changes even when the score is stable.</p>
+          </article>
+        </div>
+        <pre><code>python qyrion.py diff before.json after.json</code></pre>
       </section>
 
       <section class="split-section" id="academy">

@@ -355,6 +355,27 @@ h3 {
   margin-top: 20px;
 }
 
+.history {
+  background: #0b1117;
+}
+
+.history-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.history-grid article {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 18px;
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.history-grid p {
+  color: var(--muted);
+}
+
 .education-hero {
   min-height: 520px;
 }
@@ -522,7 +543,8 @@ pre {
   .hero,
   .split-section,
   .feature-grid,
-  .workflow-steps {
+  .workflow-steps,
+  .history-grid {
     grid-template-columns: 1fr;
   }
 

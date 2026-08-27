@@ -1,63 +1,77 @@
 # Qyrion
 
-Qyrion is a private AI and post-quantum cybersecurity project focused on local-first Cryptographic Bills of Materials.
+Qyrion is a cost-free portfolio project for private, local-first post-quantum cybersecurity planning.
 
-Core mentality:
+It generates Cryptographic Bills of Materials, or CBOMs, from public TLS certificate metadata, then turns those findings into plain-English reports, evidence packs, policy checks, and change-history comparisons.
 
-Have a plan before you need one.
+Core idea:
 
-The first prototype is intentionally small:
+**Have a plan before you need one.**
+
+## Why This Project Exists
+
+Post-quantum cybersecurity can feel abstract and intimidating. Qyrion makes the first step practical: find where cryptography is being used, explain what may become vulnerable, and create a readiness plan without uploading sensitive data.
+
+The current prototype focuses on public TLS endpoints. It is intentionally small, transparent, and free to run locally.
+
+## Features
+
+- **CBOM scanner:** Generates JSON and Markdown CBOM reports from public TLS endpoints.
+- **Evidence packs:** Converts CBOMs into leadership-friendly planning artifacts.
+- **CBOM diffing:** Compares two CBOMs and explains what changed.
+- **Policy reports:** Applies prototype governance checks to a CBOM.
+- **Quantum Security 101:** Static education page for plain-English learning.
+- **Trust receipts:** States what data was used, what was not collected, and whether external AI was used.
+- **Smoke test:** Verifies the CLI and website files.
+
+## Cost-Free Stack
+
+- Python CLI
+- Static HTML/CSS/JavaScript website
+- No paid APIs
+- No paid AI models
+- No paid database
+- No paid hosting required
+- GitHub Pages-compatible frontend
+
+## Requirements
+
+- Python 3.10+
+- OpenSSL or Windows `certutil` for certificate parsing
+
+No Python package installation is required.
+
+## Quick Start
+
+Generate a CBOM:
 
 ```powershell
 python qyrion.py cbom example.com
 ```
 
-If `python` is not available on PATH in Codex, use the bundled runtime:
-
-```powershell
-& "$env:USERPROFILE\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe" qyrion.py cbom example.com
-```
-
-You can also scan multiple public TLS endpoints:
+Scan multiple public TLS endpoints:
 
 ```powershell
 python qyrion.py cbom example.com openai.com cloudflare.com
 ```
 
-It scans a public TLS endpoint and creates:
-
-- `reports/qyrion-cbom-example.com-443.json`
-- `reports/qyrion-cbom-example.com-443.md`
-
-You can turn a CBOM JSON file into a business-friendly evidence pack:
+Generate an Evidence Pack from a CBOM:
 
 ```powershell
 python qyrion.py evidence reports/qyrion-cbom-example.com-443.json
 ```
 
-That creates:
-
-- `evidence/qyrion-evidence-example.com-443.md`
-
-You can compare two CBOM JSON files:
+Compare two CBOM files:
 
 ```powershell
 python qyrion.py diff reports/qyrion-cbom-example.com-443.json reports/qyrion-cbom-openai.com-443.json
 ```
 
-That creates:
-
-- `diffs/qyrion-diff-example.com-443-to-openai.com-443.md`
-
-You can evaluate a CBOM against Qyrion's prototype policy rules:
+Evaluate a CBOM against prototype policy rules:
 
 ```powershell
 python qyrion.py policy reports/qyrion-cbom-example.com-443.json
 ```
-
-That creates:
-
-- `policy/qyrion-policy-example.com-443.md`
 
 Run the smoke test:
 
@@ -65,65 +79,110 @@ Run the smoke test:
 powershell -ExecutionPolicy Bypass -File scripts/smoke_test.ps1
 ```
 
-## Current Prototype
+## Website
 
-Qyrion BlackBox Lite currently reports:
+Open the static website locally:
 
-- TLS version
-- Cipher suite
-- Certificate public key algorithm
-- Certificate key size
-- Signature algorithm
-- Basic quantum-vulnerability status
-- Quantum Readiness Score
-- Plain-English finding and recommendation
-- Trust Receipt showing what was and was not collected
-- Evidence Pack generation from a CBOM JSON file
-- CBOM diff reports for tracking cryptographic posture changes over time
-- Prototype policy reports for governance-style CBOM checks
+```text
+website/index.html
+```
 
-On Windows, certificate parsing can use the built-in `certutil` command. If OpenSSL is installed, Qyrion will use it automatically.
+Education page:
 
-## Website Prototype
+```text
+website/quantum-security-101.html
+```
 
-The first landing page is available at:
+The website CBOM explainer is educational only. It does not perform a live scan, contact the entered domain, send the domain anywhere, or use external AI.
 
-`website/index.html`
+## Sample Outputs
 
-The first education page is available at:
+Safe sample files are included in `samples/`:
 
-`website/quantum-security-101.html`
+- `samples/sample-cbom-example.com-443.json`
+- `samples/sample-evidence-example.com-443.md`
+- `samples/sample-policy-example.com-443.md`
 
-It introduces Qyrion's core message:
+Generated local outputs are ignored by Git:
 
-Have a plan before you need one.
+- `reports/`
+- `evidence/`
+- `diffs/`
+- `policy/`
 
-Temporary contact:
+## Project Structure
 
-`qyrionsecurity@gmail.com`
+```text
+qyrion.py                         CLI prototype
+website/index.html                Landing page
+website/quantum-security-101.html Education page
+website/styles.css                Site styles
+website/script.js                 Educational CBOM preview form
+scripts/smoke_test.ps1            Local verification script
+samples/                          Safe sample outputs
+CBOM_SCHEMA.md                    Draft CBOM schema
+START_HERE.md                     Product plan and roadmap
+BUSINESS_STRENGTHENERS.md         Business strategy ideas
+EDUCATION_STRATEGY.md             Education/content strategy
+VIDEO_SCRIPTS.md                  Draft explainer video scripts
+PROTECTION_AND_NEXT_STEPS.md      Founder protection checklist
+INVENTION_LOG.md                  Internal idea log
+```
 
 ## Privacy Posture
 
-The prototype only scans public TLS metadata for a hostname you provide.
+The current prototype only scans public TLS metadata for hostnames you provide.
 
 It does not collect:
 
-- Private keys
-- Source code
-- Logs
-- Customer data
-- Internal infrastructure maps
-- Secrets
+- private keys
+- source code
+- logs
+- customer data
+- internal infrastructure maps
+- secrets
 
-## Important Limits
+It does not use external AI or third-party APIs.
 
-This is an early planning and prototype tool, not a complete security assessment.
+## Portfolio Skills Demonstrated
 
-Future versions should add:
+- Cybersecurity product thinking
+- Python CLI development
+- JSON report generation
+- Static frontend design
+- Privacy-aware technical writing
+- Git feature branching
+- Technical-to-business communication
+- Early-stage product strategy
 
-- A stronger CBOM schema
-- Better TLS/certificate parsing
+## Limits
+
+Qyrion is an early prototype and portfolio project.
+
+It is not:
+
+- a full security audit
+- a penetration test
+- a compliance attestation
+- legal advice
+- cryptographic engineering advice
+- proof that any production system is secure or quantum-safe
+
+Post-quantum cybersecurity is an evolving field. Standards, vendor support, migration practices, and risk models may change over time.
+
+## Roadmap Ideas
+
+- Stronger CBOM schema
+- CycloneDX-compatible export
 - Repository and dependency scanning
-- CBOM diffing
-- Local AI report generation
+- Local-only AI summaries
 - Private deployment packaging
+- GitHub Pages publishing
+
+## Contact
+
+Temporary project contact:
+
+```text
+qyrionsecurity@gmail.com
+```

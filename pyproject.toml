@@ -1,0 +1,20 @@
+[project]
+name = "qyrion"
+version = "0.1.0"
+description = "Local-first CBOM prototype for post-quantum cybersecurity planning."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [
+  { name = "Qyrion", email = "qyrionsecurity@gmail.com" }
+]
+keywords = [
+  "cybersecurity",
+  "post-quantum",
+  "cryptography",
+  "cbom",
+  "tls"
+]
+
+[project.scripts]
+qyrion = "qyrion:main"

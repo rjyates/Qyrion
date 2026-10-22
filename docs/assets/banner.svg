@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="220" viewBox="0 0 1120 220" role="img" aria-labelledby="title desc">
+<title id="title">Qyrion</title><desc id="desc">Making cryptographic inventory easier to understand.</desc>
+<defs><linearGradient id="bg" x2="1" y2="1"><stop stop-color="#181825"/><stop offset="1" stop-color="#313244"/></linearGradient></defs>
+<rect width="1120" height="220" rx="18" fill="url(#bg)"/>
+<rect x="40" y="37" width="4" height="147" rx="2" fill="#f2cdcd"/>
+<g font-family="Segoe UI,Arial,sans-serif"><text x="68" y="63" font-size="13" letter-spacing="3" fill="#cba6f7">PYTHON / TLS METADATA / SECURITY PLANNING</text>
+<text x="65" y="127" font-size="50" font-weight="600" fill="#cdd6f4">Qyrion</text>
+<text x="68" y="172" font-size="23" fill="#f2cdcd">Making cryptographic inventory easier to understand.</text></g></svg>

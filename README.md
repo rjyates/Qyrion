@@ -1,3 +1,9 @@
+<p align="center"><img src="docs/assets/banner.svg" alt="Qyrion — Making cryptographic inventory easier to understand." width="100%"></p>
+
+[Regan Yates](https://github.com/rjyates) · [Homelab](https://github.com/rjyates/homelab)
+
+[Architecture & scope](docs/architecture.md) · [Verification](docs/verification.md) · [Security policy](SECURITY.md)
+
 # Qyrion
 
 Qyrion is a cost-free portfolio project for private, local-first post-quantum cybersecurity planning.
@@ -76,7 +82,7 @@ python qyrion.py policy reports/qyrion-cbom-example.com-443.json
 Run the smoke test:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File scripts/smoke_test.ps1
+powershell -File scripts/smoke_test.ps1
 ```
 
 ## Website

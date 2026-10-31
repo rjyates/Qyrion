@@ -6,3 +6,6 @@
 *.js text eol=lf
 *.md text eol=lf
 *.json text eol=lf
+
+# Preserve historical report bytes and manifest integrity hashes.
+archive/legacy-outputs/** -text whitespace=cr-at-eol

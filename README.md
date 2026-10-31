@@ -1,3 +1,5 @@
+> **Status: paused / archived development.** Historical generated samples are preserved in [archive/legacy-outputs](archive/legacy-outputs/README.md). No active development or current security assessment is implied.
+
 <p align="center"><img src="docs/assets/banner.svg" alt="Qyrion — Making cryptographic inventory easier to understand." width="100%"></p>
 
 [Regan Yates](https://github.com/rjyates) · [Homelab](https://github.com/rjyates/homelab)

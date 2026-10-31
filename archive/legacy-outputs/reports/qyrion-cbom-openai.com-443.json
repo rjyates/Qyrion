@@ -1,0 +1,89 @@
+{
+  "schema_version": "0.1.0",
+  "generated_at": "2026-06-06T21:38:06Z",
+  "generator": {
+    "name": "qyrion",
+    "version": "0.1.0"
+  },
+  "organization": {
+    "name": null,
+    "environment": "unknown"
+  },
+  "assets": [
+    {
+      "asset_id": "asset_001",
+      "asset_type": "public_tls_endpoint",
+      "name": "openai.com:443",
+      "location": {
+        "hostname": "openai.com",
+        "port": 443
+      },
+      "exposure": {
+        "internet_exposed": true,
+        "data_sensitivity": "unknown",
+        "data_lifetime": "unknown"
+      },
+      "protocol": {
+        "tls_version": "TLSv1.3",
+        "cipher_suite": "TLS_AES_256_GCM_SHA384"
+      },
+      "crypto": [
+        {
+          "component_id": "crypto_001",
+          "component_type": "certificate",
+          "algorithm_family": "ECC",
+          "algorithm": "id-ecPublicKey",
+          "key_size_bits": 256,
+          "signature_algorithm": "ecdsa-with-SHA384",
+          "validity": {
+            "not_before": "May 28 19:33:26 2026 GMT",
+            "not_after": "Aug 26 19:33:25 2026 GMT"
+          },
+          "quantum_vulnerable": true,
+          "standards_context": {
+            "classical_status": "widely_used",
+            "post_quantum_status": "not_quantum_safe"
+          }
+        }
+      ]
+    }
+  ],
+  "findings": [
+    {
+      "finding_id": "finding_001",
+      "asset_id": "asset_001",
+      "component_id": "crypto_001",
+      "severity": "medium",
+      "category": "quantum_vulnerable_public_key_crypto",
+      "title": "ECC certificate is vulnerable to future quantum attacks",
+      "description": "This endpoint uses ECC-based public-key cryptography. RSA, ECC, and DSA are considered vulnerable to a future cryptographically relevant quantum computer.",
+      "recommendation": "Track this asset in a CBOM, monitor ecosystem support for hybrid or post-quantum TLS, and prioritize migration based on data sensitivity and confidentiality lifetime.",
+      "confidence": "high"
+    }
+  ],
+  "summary": {
+    "asset_count": 1,
+    "crypto_component_count": 1,
+    "quantum_vulnerable_component_count": 1,
+    "highest_severity": "medium",
+    "quantum_readiness_score": 55,
+    "plain_english": "This asset uses public-key cryptography that should be tracked for post-quantum migration. No private data was required to generate this CBOM."
+  },
+  "trust_receipt": {
+    "data_sources": [
+      "public TLS handshake metadata",
+      "public X.509 certificate metadata"
+    ],
+    "not_collected": [
+      "private keys",
+      "source code",
+      "logs",
+      "customer data",
+      "secrets",
+      "internal infrastructure maps"
+    ],
+    "external_ai_used": false,
+    "sensitive_data_uploaded": false,
+    "plain_english": "This CBOM was generated locally from public TLS certificate metadata. No private keys, source code, logs, customer data, secrets, or internal infrastructure maps were collected or sent to external AI."
+  }
+}

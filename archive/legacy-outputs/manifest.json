@@ -1,0 +1,65 @@
+[
+  {
+    "file": "reports/qyrion-cbom-example.com-443.json",
+    "sha256": "4209b083d5e837ee3c51ded1754bc856fe6af6700f63fe063a4ddef12d860add",
+    "source": "historical local generated output",
+    "generator": "Qyrion",
+    "review": "preserved as historical sample, not a current security assessment"
+  },
+  {
+    "file": "reports/qyrion-cbom-example.com-443.md",
+    "sha256": "00c08d3e5100ff4a9fdda31faee2289c2e5d38b367c49388a638dca01319ca9f",
+    "source": "historical local generated output",
+    "generator": "Qyrion",
+    "review": "preserved as historical sample, not a current security assessment"
+  },
+  {
+    "file": "reports/qyrion-cbom-openai.com-443.json",
+    "sha256": "30198da751675dcb129bffc7d9b62e92d3b359ed5076658ab1f49f302f6c967d",
+    "source": "historical local generated output",
+    "generator": "Qyrion",
+    "review": "preserved as historical sample, not a current security assessment"
+  },
+  {
+    "file": "reports/qyrion-cbom-openai.com-443.md",
+    "sha256": "19bfac7277a39cffeb3e3e336fcc908fc914a7f58f78a171dc6eaa7fb61ce540",
+    "source": "historical local generated output",
+    "generator": "Qyrion",
+    "review": "preserved as historical sample, not a current security assessment"
+  },
+  {
+    "file": "evidence/qyrion-evidence-example.com-443.md",
+    "sha256": "f9de43cf41eec8fd61a84c016513ef3e336c52db69c4246eb053dd1b15e1de81",
+    "source": "historical local generated output",
+    "generator": "Qyrion",
+    "review": "preserved as historical sample, not a current security assessment"
+  },
+  {
+    "file": "evidence/qyrion-evidence-pack-qyrion-cbom-example.com-443.md",
+    "sha256": "7baf959736f28770866293eeae209d5da22869395f51e107e634809f58d9610e",
+    "source": "historical local generated output",
+    "generator": "Qyrion",
+    "review": "preserved as historical sample, not a current security assessment"
+  },
+  {
+    "file": "evidence/qyrion-evidence-pack-qyrion-cbom-openai.com-443.md",
+    "sha256": "769ce4aac9b41fda81c46c8843ee57385ef9a237fec359c8dc00e868614d9372",
+    "source": "historical local generated output",
+    "generator": "Qyrion",
+    "review": "preserved as historical sample, not a current security assessment"
+  },
+  {
+    "file": "policy/qyrion-policy-example.com-443.md",
+    "sha256": "6252665367e4f5cdd5265deaab290252698d4ce53d1c3783837ae0e934de83f2",
+    "source": "historical local generated output",
+    "generator": "Qyrion",
+    "review": "preserved as historical sample, not a current security assessment"
+  },
+  {
+    "file": "diffs/qyrion-diff-example.com-443-to-openai.com-443.md",
+    "sha256": "f995f146bd88ce93b6336de270346669a0af36751bff2796b7edf21d7158f8f4",
+    "source": "historical local generated output",
+    "generator": "Qyrion",
+    "review": "preserved as historical sample, not a current security assessment"
+  }
+]
